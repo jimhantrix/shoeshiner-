@@ -2,11 +2,12 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const graphqlHttp = require('express-graphql');
 const { buildSchema } = require ('graphql');
-
+const mongoose = require ('mongoose');
 const app = express();
 
 const events = [];
 app.use(bodyParser.json());
+
 // In this section we are creating a graphql schema
 // we use graphql ( parser) syntax
 
@@ -61,4 +62,14 @@ graphqlHttp({
     graphiql: true
 })
 );
-app.listen(3000);
+
+mongoose.connect(`
+  mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}
+  @cluster0-uc0oy.gcp.mongodb.net/test?retryWrites=true&w=majority`
+)
+.then(() => {
+  app.listen(3000);
+})
+.catch(err => {
+console.log(err);
+});
