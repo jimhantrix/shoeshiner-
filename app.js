@@ -2,11 +2,13 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const graphqlHttp = require('express-graphql');
 const { buildSchema } = require ('graphql');
+
 const app = express();
 
-app.use(bodyParser.json());
-
 const events = [];
+app.use(bodyParser.json());
+// In this section we are creating a graphql schema
+// we use graphql ( parser) syntax
 
 app.use('/graphql',
 graphqlHttp({
@@ -22,9 +24,8 @@ graphqlHttp({
       input EventInput {
         title: String!
         description: String!
-        price:String!
+        price:Float!
         date: String!
-
       }
 
       type RootQuery{
@@ -38,7 +39,8 @@ graphqlHttp({
       schema{
         query: RootQuery
         mutation:  RootMutation
-      }`),
+      }
+      `),
 
     rootValue: {
       events: () =>{
@@ -49,7 +51,7 @@ graphqlHttp({
           _id: Math.random().toString(),
           title: args.eventInput.title,
           description: args.eventInput.description,
-          price: args.eventInput.price,
+          price: +args.eventInput.price,
           date: args.eventInput.date
         };
         events.push(event);
