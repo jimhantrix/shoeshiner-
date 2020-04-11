@@ -56,7 +56,7 @@ graphqlHttp({
       }
   `),
 
-// This is our resolver
+// This is our resolvers
   rootValue: {
       events: () =>{
         return Event.find()
@@ -69,28 +69,46 @@ graphqlHttp({
           throw err;
         });
       },
+      // Create event function
       createEvent: args => {
-
         const event = new Event({
           title: args.eventInput.title,
           description: args.eventInput.description,
           price: +args.eventInput.price,
-          date: new Date(args.eventInput.date)
+          date: new Date(args.eventInput.date),
+          creator: "5e91a237fb2e20378174bfbf"
         });
+        let createdEvent; // Once created
         return event
         .save()
         .then(result  => {
-          console.log(result);
-          return { ...result._doc, _id: result._doc._id.toString()};
+          createdEvent = { ...result._doc, _id: result._doc._id.toString()};
+          return User.findById("5e91a237fb2e20378174bfbf")//user id
+        }).then(user => {
+          if (!user) {//Check user
+            throw new Error('User not found.');
+          }
+          user.CreatedEvents.push(event);
+          return user.save()//save the event and its creator
         })
-        .catch(err => {
+        .then(result => {
+         return createdEvent;
+        })
+        .catch(err => {// Else if invalid provide error
           console.log(err);
           throw err;
         });
       },
-      createUser: args => {
+      // Create users
+      createUser: args => {// Check if user does not exist
+        return User.findOne({email:  args.userInput.email})
+        .then(user =>{
+        if (user) {
+          throw new Error('User exists already.');
+        }
         return bcrypt
         .hash(args.userInput.password, 12)
+      })
         .then(hashedPassword => {
           const user = new User({
             email: args.userInput.email,
@@ -99,7 +117,7 @@ graphqlHttp({
           return user.save();
         })
         .then(result => {
-          return {...result._doc, _id: result.id};
+          return {...result._doc,password:null, _id: result.id};
         })
         .catch( err => {
           throw err;
