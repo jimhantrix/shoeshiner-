@@ -44,7 +44,15 @@ graphqlHttp({
 // This is our resolver
   rootValue: {
       events: () =>{
-        return events;
+        return Event.find()
+        .then(events => {
+            return events.map( event => {
+              return { ...event._doc, _id: event.id };
+            });
+        })
+        .catch( err =>{
+          throw err;
+        });
       },
       createEvent: args => {
 
@@ -58,7 +66,7 @@ graphqlHttp({
         .save()
         .then(result  => {
           console.log(result);
-          return { ...result._doc};
+          return { ...result._doc, _id: result._doc._id.toString()};
         })
         .catch(err => {
           console.log(err);
@@ -78,6 +86,6 @@ mongoose.connect(
 .then(() => {//after coonections with mongodb start application
   app.listen(4000);
 })
-.catch(err => {// if any error -> log error 
+.catch(err => {// if any error -> log error
 console.log(err);
 });
