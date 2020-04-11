@@ -11,6 +11,17 @@ const app = express();
 // In this section we are creating a graphql schema
 // we use graphql ( parser) syntax
 app.use(bodyParser.json());
+
+const user = userId =>{
+  return User.findById(userId)
+  .then(user =>{
+    return {...user._doc, _id: user.id};
+  })
+  .catch(err =>{
+    throw err;
+  });
+}
+
 app.use('/graphql',
 graphqlHttp({
     schema: buildSchema(`
@@ -20,12 +31,14 @@ graphqlHttp({
         description: String!
         price: Float!
         date: String!
+        creator: User!
       }
 
       type User {
         _id: ID!
         email: String!
         password: String
+        createEvent:[Event!]
       }
 
       input EventInput {
@@ -62,7 +75,12 @@ graphqlHttp({
         return Event.find()
         .then(events => {
             return events.map( event => {
-              return { ...event._doc, _id: event.id };
+              return { ...event._doc, _id: event.id,
+                creator:{
+                ...event._doc.creator._doc,
+                _id: event._doc.creator.id
+              }
+            };
             });
         })
         .catch( err =>{
