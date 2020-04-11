@@ -6,14 +6,9 @@ const mongoose = require ('mongoose');
 const Event = require ('./models/event');
 
 const app = express();
-
-
-
-app.use(bodyParser.json());
-
 // In this section we are creating a graphql schema
 // we use graphql ( parser) syntax
-
+app.use(bodyParser.json());
 app.use('/graphql',
 graphqlHttp({
     schema: buildSchema(`
@@ -52,11 +47,12 @@ graphqlHttp({
         return events;
       },
       createEvent: args => {
+
         const event = new Event({
           title: args.eventInput.title,
           description: args.eventInput.description,
           price: +args.eventInput.price,
-          date: new Date( args.eventInput.date)
+          date: new Date(args.eventInput.date)
         });
         return event
         .save()
@@ -73,14 +69,15 @@ graphqlHttp({
   graphiql: true
 })
 );
-
-mongoose.connect(`
-  mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}
-  @cluster0-uc0oy.gcp.mongodb.net/${process.env.MONGO_DB}?retryWrites=true`
+//connect MONGO-DB through mongoose - feature to change password internally
+mongoose.connect(
+  `mongodb+srv://${process.env.MONGO_USER}:${
+    process.env.MONGO_PASSWORD
+  }@cluster0-uc0oy.gcp.mongodb.net/${process.env.MONGO_DB}?retryWrites=true`
 )
-.then(() => {
-  app.listen(3000);
+.then(() => {//after coonections with mongodb start application
+  app.listen(4000);
 })
-.catch(err => {
+.catch(err => {// if any error -> log error 
 console.log(err);
 });
