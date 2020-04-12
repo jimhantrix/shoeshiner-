@@ -3,19 +3,20 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-
-email: {
+//
+email:{
   type: String,
   required: true
 },
-password: {
+password:{
   type: String,
   required: true
 },
-CreatedEvents: [{
+createdEvents:[
+  {
   type: Schema.Types.ObjectId,
   ref: 'Event'
-    },
+    }
   ]
 });
 

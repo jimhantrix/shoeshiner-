@@ -12,10 +12,28 @@ const app = express();
 // we use graphql ( parser) syntax
 app.use(bodyParser.json());
 
+// Event
+const events = eventIds => {
+  return Event.find({ _id: {$in: eventIds}})
+  .then( events => {
+return events.map(event =>{
+  return { ...event._doc,
+     id: event.id,
+     creator: user.bind(this, event.creator)
+    };
+   });
+  })
+  .catch(err => {
+    throw err;
+  });
+};
+// Users
 const user = userId =>{
   return User.findById(userId)
   .then(user =>{
-    return {...user._doc, _id: user.id};
+    return {
+      ...user._doc, _id: user.id,
+       createdEvents: events.bind(this, user._doc.createdEvents)};
   })
   .catch(err =>{
     throw err;
@@ -38,7 +56,7 @@ graphqlHttp({
         _id: ID!
         email: String!
         password: String
-        createEvent:[Event!]
+        createdEvents:[Event!]
       }
 
       input EventInput {
@@ -76,10 +94,7 @@ graphqlHttp({
         .then(events => {
             return events.map( event => {
               return { ...event._doc, _id: event.id,
-                creator:{
-                ...event._doc.creator._doc,
-                _id: event._doc.creator.id
-              }
+                creator: user.bind(this, event._doc.creator)
             };
             });
         })
@@ -100,13 +115,14 @@ graphqlHttp({
         return event
         .save()
         .then(result  => {
-          createdEvent = { ...result._doc, _id: result._doc._id.toString()};
+          createdEvent = { ...result._doc, _id: result._doc._id.toString(),
+          creator: user.bind(this, result._doc.creator)};
           return User.findById("5e91a237fb2e20378174bfbf")//user id
         }).then(user => {
           if (!user) {//Check user
             throw new Error('User not found.');
           }
-          user.CreatedEvents.push(event);
+          user.createdEvents.push(event);
           return user.save()//save the event and its creator
         })
         .then(result => {
