@@ -32,7 +32,7 @@ const user = async  userId =>{
 };
 
 module.exports ={
-    events: async () =>{
+    events: async () =>{// Execute asynchronously as soon as it is available
       try{
       const events = await Event.find()
           return events.map( event => {
@@ -53,7 +53,7 @@ module.exports ={
         description: args.eventInput.description,
         price: +args.eventInput.price,
         date: new Date(args.eventInput.date),
-        creator: "5e91a237fb2e20378174bfbf"
+        creator: "5e94340bd30c4685063c1591"
       });
       let createdEvent; // Once created
       try{
@@ -63,12 +63,13 @@ module.exports ={
         date: new Date(event._doc.date).toISOString(),
         creator: user.bind(this, result._doc.creator)
       };
-      const user = await User.findById("5e91a237fb2e20378174bfbf");//user id
-        if (!user) {//Check user
+      const creator = await User.findById("5e94340bd30c4685063c1591");//user id
+        if (!creator) {//Check user
           throw new Error('User not found.');
         }
-        user.createdEvents.push(event);
-        await user.save()//save the event and its creator
+        creator.createdEvents.push(event);
+       await creator.save()//save the event and its creator
+
        return createdEvent;
      }catch(err){// Else if invalid provide error
         console.log(err)
@@ -78,8 +79,8 @@ module.exports ={
     // Create users
     createUser: async args => {// Check if user does not exist
       try{//
-      const existibgUser = await User.findOne({email:  args.userInput.email})
-      if (existibgUser) {
+      const existingUser = await User.findOne({email:  args.userInput.email})
+      if (existingUser) {
         throw new Error('User exists already.');
       }
       const hashedPassword = await bcrypt.hash(args.userInput.password, 12);
