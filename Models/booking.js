@@ -1,5 +1,4 @@
 const mongoose = require ('mongoose');
-
 const Schema = mongoose.Schema;
 
 const bookingSchema = new Schema({
@@ -8,7 +7,7 @@ const bookingSchema = new Schema({
     ref: 'Event'
   },
   user:{
-    type: Shema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'User'
   }
 },
