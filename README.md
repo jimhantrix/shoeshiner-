@@ -1,2 +1,2 @@
 # shoeshiner-
-A great easy to use event booking app 
+A great and easy to use, event booking app
