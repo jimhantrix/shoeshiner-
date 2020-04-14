@@ -19,15 +19,12 @@ app.use('/graphql',
 );
 //connect MONGO-DB through mongoose - feature to change password internally
 //after coonections with mongodb start application
-mongoose
-  .connect(
-    `mongodb+srv://${process.env.MONGO_USER}:${
-      process.env.MONGO_PASSWORD
-    }@cluster0-ntrwp.mongodb.net/${process.env.MONGO_DB}?retryWrites=true`
-  )
+mongoose.connect(`mongodb+srv://${process.env.MONGO_USER}:${
+  process.env.MONGO_PASSWORD
+}@cluster0-uc0oy.gcp.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`)
   .then(() => {
     app.listen(4000);
   })
-  .catch(err => { // if any error -> log error
+  .catch(err => {
     console.log(err);
   });

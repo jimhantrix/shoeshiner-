@@ -14,7 +14,7 @@ const events = async eventIds => {
     events.map(event => {
       return {
         ...event._doc,
-        id: event.id,
+        _id: event.id,
         date: new Date(event._doc.date).toISOString(),
         creator: user.bind(this, event.creator)
       };
@@ -78,7 +78,7 @@ module.exports = {
       description: args.eventInput.description,
       price: +args.eventInput.price,
       date: new Date(args.eventInput.date),
-      creator:"5e91a237fb2e20378174bfbf"
+      creator:"5e95cfa133fd841075cc89b0"
     });
     let createdEvent; // Once created
     try {
@@ -90,7 +90,7 @@ module.exports = {
         date: new Date(event._doc.date).toISOString(),
         creator: user.bind(this, result._doc.creator)
       };
-      const creator = await User.findById("5e91a237fb2e20378174bfbf"); //user id
+      const creator = await User.findById("5e95cfa133fd841075cc89b0"); //user id
       if (!creator) { //Check if user exists
         throw new Error('User not found.');
       }
@@ -135,7 +135,7 @@ module.exports = {
       _id: args.eventId
     });
     const booking = new Booking({
-      user: "5e91a237fb2e20378174bfbf",
+      user: "5e95cfa133fd841075cc89b0",
       event: fetchedEvent
     });
     const result = await booking.save();
