@@ -4,7 +4,7 @@ const User = require ('../../models/user');
 
 // Event( resolvers)
 const events = async eventIds => {
-  try {// I want to check for errors
+  try {// checking for errors
       const events = await Event.find({ _id: {$in: eventIds}})
       events.map(event =>{
       return { ...event._doc,
@@ -18,21 +18,21 @@ const events = async eventIds => {
     }
 };
 // Users
-const user = async  userId =>{
+const user = async  userId =>{// We are creating a new users
   try{
      const user = wait = User.findById(userId);
-      return {
+      return {// User with their created event
         ...user._doc,
          _id: user.id,
          createdEvents: events.bind(this, user._doc.createdEvents)
        };
-     }catch (err){
+     }catch (err){//otherwise give an error
     throw err;
   }
 };
 
 module.exports ={
-    events: async () =>{// Execute asynchronously as soon as it is available
+    events: async () =>{// Execute asynchronously as soon as promise is returned
       try{
       const events = await Event.find()
           return events.map( event => {
@@ -42,7 +42,7 @@ module.exports ={
               creator: user.bind(this, event._doc.creator)
           };
         });
-      }catch (err){
+      }catch (err){//handle errors
         throw err;
       }
     },
@@ -57,14 +57,14 @@ module.exports ={
       });
       let createdEvent; // Once created
       try{
-      const result = await event
+      const result = await event// wait until promise is settles and return result
       .save()
         createdEvent = { ...result._doc, _id: result._doc._id.toString(),
         date: new Date(event._doc.date).toISOString(),
         creator: user.bind(this, result._doc.creator)
       };
       const creator = await User.findById("5e94340bd30c4685063c1591");//user id
-        if (!creator) {//Check user
+        if (!creator) {//Check if user exists
           throw new Error('User not found.');
         }
         creator.createdEvents.push(event);
@@ -77,21 +77,21 @@ module.exports ={
       }
     },
     // Create users
-    createUser: async args => {// Check if user does not exist
-      try{//
+    createUser: async args => {// Check if user exists
+      try{//check if there are any errors
       const existingUser = await User.findOne({email:  args.userInput.email})
       if (existingUser) {
         throw new Error('User exists already.');
       }
       const hashedPassword = await bcrypt.hash(args.userInput.password, 12);
 
-        const user = new User({
+        const user = new User({//
           email: args.userInput.email,
           password: hashedPassword
         })
         const result = await user.save();
         return {...result._doc,password:null, _id: result.id};
-      } catch (err){
+      } catch (err){// handle the errors
         throw err;
     }
   }
