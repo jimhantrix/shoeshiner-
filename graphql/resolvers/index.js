@@ -38,7 +38,7 @@ const user = async userId => { // We are creating a new users
     throw err;
   }
 };
-
+//module
 module.exports = {
   events: async () => { // Execute asynchronously as soon as promise is returned
     try {
@@ -55,6 +55,7 @@ module.exports = {
       throw err;
     }
   },
+  // Event bookings
   bookings: async () => {
     try {
       const bookings = await Booking.find();
@@ -77,7 +78,7 @@ module.exports = {
       description: args.eventInput.description,
       price: +args.eventInput.price,
       date: new Date(args.eventInput.date),
-      creator: "5e94340bd30c4685063c1591"
+      creator:"5e91a237fb2e20378174bfbf"
     });
     let createdEvent; // Once created
     try {
@@ -89,7 +90,7 @@ module.exports = {
         date: new Date(event._doc.date).toISOString(),
         creator: user.bind(this, result._doc.creator)
       };
-      const creator = await User.findById("5e94340bd30c4685063c1591"); //user id
+      const creator = await User.findById("5e91a237fb2e20378174bfbf"); //user id
       if (!creator) { //Check if user exists
         throw new Error('User not found.');
       }
@@ -123,7 +124,8 @@ module.exports = {
         password: null,
         _id: result.id
       };
-    } catch (err) { // handle the errors
+    }
+    catch (err) { // handle the errors
       throw err;
     }
   },
@@ -133,15 +135,19 @@ module.exports = {
       _id: args.eventId
     });
     const booking = new Booking({
-      user: "5e94340bd30c4685063c1591",
+      user: "5e91a237fb2e20378174bfbf",
       event: fetchedEvent
     });
     const result = await booking.save();
     return {
       ...result._doc,
-      id: result.id,
+      _id: result.id,
       createdAt: new Date(result._doc.createdAt).toISOString(),
       updatedAt: new Date(result._doc.createdAt).toISOString()
     };
   }
+
+
+
+
 };
