@@ -1,6 +1,7 @@
-const { dateTostring} = require('../../helpers/date');
 const Event = require('../../models/event');
-const { transformBooking, transformEvent } = require('./merge');
+const Booking = require('../../models/booking');
+const {transformBooking, transformEvent } = require('./merge');
+
 
 //module
 module.exports = {
@@ -39,6 +40,4 @@ module.exports = {
       throw err;
     }
   }
-
-
 };

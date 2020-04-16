@@ -1,6 +1,16 @@
+const { dateTostring} = require('../../helpers/date');
 const Event = require('../../models/event');
-const { transformEvent } = require('./merge');
+const { user } = require ('./merge')
 
+
+const transformEvent = event => {
+  return {
+    ...event._doc,
+    id: event.id,
+    date: dateTostring(event._doc.date),
+    creator: user.bind(this,event.creator)
+  };
+};
 
 //module
 module.exports = {
@@ -41,4 +51,5 @@ module.exports = {
       throw err;
     }
   }
+
 };
