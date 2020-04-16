@@ -4,7 +4,7 @@ const { buildSchema } = require ('graphql');
 module.exports = buildSchema(`
   type Booking {
     _id: ID!
-    event:Event!
+    event: Event!
     user: User!
     createdAt: String!
     updatedAt: String!
