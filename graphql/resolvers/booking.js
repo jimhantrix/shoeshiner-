@@ -21,12 +21,15 @@ module.exports = {
     }
   },
   // Create bookings
-  bookEvent: async args => {
+  bookEvent: async (args, req) => {
+    if (!req.isAuth){
+      throw new Error('Unauthenticated');
+    }
     const fetchedEvent = await Event.findOne({
       _id: args.eventId
     });
     const booking = new Booking({
-      user: "5e95cfa133fd841075cc89b0",
+      user: req.userId,
       event: fetchedEvent
     });
     const result = await booking.save();
