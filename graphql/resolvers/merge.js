@@ -9,7 +9,7 @@ const events = async eventIds => {
       _id: {
         $in: eventIds
       }
-    })
+    });
     return events.map(event => {
       return transformEvent(event);
     });

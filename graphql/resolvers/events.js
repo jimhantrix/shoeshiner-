@@ -1,16 +1,10 @@
-const { dateTostring} = require('../../helpers/date');
+
 const Event = require('../../models/event');
-const { user } = require ('./merge')
+const User = require ('../../models/user');
 
 
-const transformEvent = event => {
-  return {
-    ...event._doc,
-    id: event.id,
-    date: dateTostring(event._doc.date),
-    creator: user.bind(this,event.creator)
-  };
-};
+const { transformEvent } = require('./merge');
+
 
 //module
 module.exports = {
@@ -25,19 +19,22 @@ module.exports = {
     }
   },
   // Create event function
-  createEvent: async args => {
+  createEvent: async (args, req) => {
+    if (!req.isAuth){// verify user
+      throw new Error('Unautheticated');
+    }
     const event = new Event({
       title: args.eventInput.title,
       description: args.eventInput.description,
       price: +args.eventInput.price,
       date: new Date(args.eventInput.date),
-      creator: "5e95cfa133fd841075cc89b0"
+      creator: req.userId
     });
     let createdEvent; // Once created
     try { // try and wait until promise is settles and return result
       const result = await event.save()
       createdEvent = transformEvent(result);
-      const creator = await User.findById("5e95cfa133fd841075cc89b0"); //user id
+      const creator = await User.findById(req.userId); //user id
 
       if (!creator) { //Check if user exists
         throw new Error('User not found.');
