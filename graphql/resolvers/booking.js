@@ -1,11 +1,16 @@
-const { dateTostring} = require('../../helpers/date');
 const Event = require('../../models/event');
-const { transformBooking, transformEvent } = require('./merge');
+const User = require('../../models/user');
+
+const { transformBooking,transformEvent } = require('./merge');
+
 
 //module
 module.exports = {
 
-  bookings: async () => {
+  bookings: async (args, req) => {
+    if (!req.isAuth) {
+      throw new Error('Unautheticated');
+    }
     try {
       const bookings = await Booking.find();
       return bookings.map(booking => {
@@ -27,7 +32,11 @@ module.exports = {
     const result = await booking.save();
     return transformBooking(result);
   },
+  //Cancel Booking
   cancelBooking: async args => {
+    if (!req.isAuth) {
+      throw new Error('Unautheticated!');
+    }
     try {
       const booking = await Booking.findById(args.bookingId).populate('event')
       const event = transformEvent(booking.event);
@@ -39,6 +48,4 @@ module.exports = {
       throw err;
     }
   }
-
-
 };
