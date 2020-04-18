@@ -1,19 +1,21 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import './MainNavigation.css';
 
 const mainNavigation = props => (
-  <header>
 
+  <header className= "main-navigation">
     <div className ="main-navigation_logo">
-      <h1> Shoeshiner </h1>
+
+      <h1> Shiner </h1>
     </div>
 
-    <nav className = 'main-navigation_item'>
-    
+    <nav className = 'main-navigation_items'>
+
       <ul>
-        <li><NavLink> to="/auth">Aunthenticate</NavLink></li>
-        <li><NavLink> to="/events">Events</NavLink></li>
-        <li><NavLink> to="/auth">Bookings</NavLink></li>
+        <li><NavLink to="/auth"> Aunthenticate </NavLink></li>
+        <li><NavLink to="/events"> Events </NavLink></li>
+        <li><NavLink to="/bookings">Bookings </NavLink></li>
       </ul>
 
     </nav>
@@ -21,4 +23,4 @@ const mainNavigation = props => (
   </header>
 );
 
-export deafault mainNavigation;
+export default mainNavigation;
