@@ -38,10 +38,13 @@ class App extends Component {
               {!this.state.token && <Redirect from="/" to="/auth" exact />}
               {this.state.token && <Redirect from="/" to="/events" exact />}
               {this.state.token && <Redirect from="/auth" to="/events" exact />}
+
               {!this.state.token && (
                 <Route path="/auth" component={AuthPage} />
               )}
+
               <Route path="/events" component={EventsPage} />
+
               {this.state.token && (
                 <Route path="/bookings" component={BookingsPage} />
               )}
