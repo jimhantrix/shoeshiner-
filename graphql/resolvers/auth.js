@@ -29,7 +29,7 @@ module.exports = {
     }
   },
   // log in - verify user
-  login: async ({email,password}) => {
+  login: async ({email, password}) => {
     const user = await User.findOne({email: email});
     if (!user) { // check user exist
       throw new Error('User does not exist!');

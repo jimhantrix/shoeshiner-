@@ -44,7 +44,7 @@ class AuthPage extends Component {
       requestBody ={
         query: `
         mutation {
-          createUser(userInput: {email:"{email}", password:"{password}"}){
+          createUser(userInput: {email:"${email}", password:"${password}"}){
             _id
             email
           }
