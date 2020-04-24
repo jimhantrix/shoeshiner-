@@ -6,9 +6,7 @@ const User = require('../../models/user');
 module.exports = {
   createUser: async args => {
     try {
-      const existingUser = await User.findOne({
-        email: args.userInput.email
-      });
+      const existingUser = await User.findOne({email: args.userInput.email});
       if (existingUser) {
         throw new Error('User exists already.');
       }
@@ -31,13 +29,8 @@ module.exports = {
     }
   },
   // log in - verify user
-  login: async ({
-    email,
-    password
-  }) => {
-    const user = await User.findOne({
-      email: email
-    });
+  login: async ({email,password}) => {
+    const user = await User.findOne({email: email});
     if (!user) { // check user exist
       throw new Error('User does not exist!');
     }
@@ -51,11 +44,6 @@ module.exports = {
     }, 'somesupersecrectkeytokensuper', {
       expiresIn: '1h'
     });
-    return {
-      userId: user.id,
-      token,
-      tokenExpiration: 1
-    };
-
+    return {userId: user.id, token:token, tokenExpiration: 1 };
   }
 };
